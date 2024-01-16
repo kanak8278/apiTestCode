@@ -1,5 +1,6 @@
 {
-    "base_url": "https://stagingapi.tele-law.in/v1/applicant",
+    "base_url": "https://stagingapi.tele-law.in/v1",
+    "applicant_base_url": "https://stagingapi.tele-law.in/v1/applicant",
     "apis": { 
         "login": {
             "endpoint": "/auth/login",

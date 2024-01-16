@@ -5,7 +5,6 @@ from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad, unpad
 import base64
 
-# Encryption and Decryption Functions
 def encrypt_data(data, key, iv):
     cipher = AES.new(key, AES.MODE_CBC, iv)
     ct_bytes = cipher.encrypt(pad(data.encode(), AES.block_size))
@@ -17,15 +16,16 @@ def decrypt_data(encrypted_data, key, iv):
     pt = unpad(cipher.decrypt(encrypted_data_bytes), AES.block_size)
     return pt.decode('utf-8')
 
-# Function to Load Configuration
 def load_json(filename):
     with open(filename, 'r') as file:
         return json.load(file)
 
-# Function to Make API Call
 def make_api_call(config, api_key, key, iv, response_file):
     api_details = config['apis'][api_key]
-    url = f"{config['base_url']}{api_details['endpoint']}"
+    if api_key == 'case_otp_send' or api_key == 'case_otp_validate':
+        url = f"{config['base_url']}{api_details['endpoint']}"
+    else:
+        url = f"{config['applicant_url']}{api_details['endpoint']}"
     headers = api_details['headers']
     print("Headers:", headers)
     body = json.dumps(api_details['body'])
@@ -60,12 +60,22 @@ api_names = list(config['apis'].keys())
 api_list_string = '\n'.join(api_names)
 
 # Custom help message
-help_message = f'API Call Script\n\nAvailable APIs:\n{api_list_string}\n\nUsage: script.py [API_NAME]'
+help_message = f'API Call Script\n\nAvailable APIs:\n{api_list_string}\n\nUsage: script.py [API_NAME] [--headers HEADERS_JSON] [--body BODY_JSON]'
 
 # Setup command line argument parsing
 parser = argparse.ArgumentParser(description=help_message, formatter_class=argparse.RawTextHelpFormatter)
 parser.add_argument('api_name', type=str, help='Name of the API to call')
+parser.add_argument('--headers', type=str, help='JSON string for headers', default='{}')
+parser.add_argument('--body', type=str, help='JSON string for body', default='{}')
 args = parser.parse_args()
+
+# Parse headers and body from JSON strings
+try:
+    custom_headers = json.loads(args.headers)
+    custom_body = json.loads(args.body)
+except json.JSONDecodeError:
+    print("Invalid JSON format in headers or body arguments.")
+    exit(1)
 
 # Response file to save outputs
 response_file = 'api_responses.txt'
@@ -73,10 +83,15 @@ response_file = 'api_responses.txt'
 # Call the specified API
 api_key = args.api_name
 if api_key in config['apis']:
+    # Override config values with command line arguments
+    config['apis'][api_key]['headers'].update(custom_headers)
+    config['apis'][api_key]['body'].update(custom_body)
+
     print(f"\nCalling API: {api_key}")
     response = make_api_call(config, api_key, key, iv, response_file)
     
-    print("Response:")
+    print(f"Response:")
     print(response)
+  
 else:
     print(f"API {api_key} not found in configuration.")
