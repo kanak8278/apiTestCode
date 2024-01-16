@@ -1,0 +1,121 @@
+{
+    "base_url": "https://stagingapi.tele-law.in/v1/applicant",
+    "apis": { 
+        "login": {
+            "endpoint": "/auth/login",
+            "headers": {"Content-Type": "application/json"},
+            "body": {
+                "username": "{username}",
+                "password": "{password}",
+                "fcm_id": "NA",
+                "role": "applicant"
+            }
+        },
+        "profile_details": {
+            "endpoint": "/profile/get-profile-detail",
+            "headers": {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer {authtoken}",
+                "X-User-Guid": "{xuserguid}",
+                "X-User-Role": "applicant",
+                "Language":"en"
+            },
+            "body": {
+            }
+        },
+        "get_advocate_list": {
+            "endpoint": "/case/get-advocate-list",
+            "headers": {
+                "Content-Type": "application/json",
+                "Language": "en",
+                "Authorization": "Bearer {authtoken}",
+                "X-User-Guid": "{xuserguid}",
+                "X-User-Role": "applicant"
+            },
+            "body": {
+                "slot_date": "2024-01-16",
+                "district_code": "913502",
+                "gender": "Male",
+                "language": "8",
+                "category_id": "144"
+            }
+        },
+        "get_slot": {
+            "endpoint": "/advocate/get-slot",
+            "headers": {
+                "Content-Type": "application/json",
+                "Language": "en",
+                "Authorization": "Bearer {authtoken}",
+                "X-User-Guid": "{xuserguid}",
+                "X-User-Role": "applicant"
+            },
+            "body": {
+                "advocate_id": "257",
+                "date": "2024-01-18"
+            }
+        },
+        
+        "case_otp_send": {
+            "endpoint": "/otp/send",
+            "headers": {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer {authtoken}",
+                "X-User-Guid": "{xuserguid}",
+                "X-User-Role": "applicant",
+                "Language":"en"
+        },
+            "body": {
+                "mobile": "{mobile}"
+            }            
+        },
+        "case_otp_validate": {
+            "endpoint": "/otp/validate",
+            "headers": {
+             "Content-Type": "application/json",
+             "Next-Request-Token":"3b4c2f0ff5861c783f44f798c372dfa4",
+             "Authorization": "Bearer 2JEchY_kcP38ir7I0pOFvUBu8L7qix86",
+             "X-User-Guid": "11291ac6-046e-451e-8fc6-d6808b7e132c",
+             "X-User-Role": "applicant",
+             "Language":"en"
+            },
+            "body": {
+                "mobile": "{mobile}",
+                "otp":"{otp}"
+            
+            }            
+        },
+
+        "add_case": {
+            "endpoint": "/case/add",
+            "headers": {
+                "Content-Type": "application/json",
+                "Language": "en",
+                "Authorization": "Bearer {authtoken}",
+                "X-User-Guid": "{xuserguid}",
+                "Next-Request-Token":"{get from caseotpvalidate}",
+                "X-User-Role": "applicant"
+            },
+            "body": {
+                "advocate_id":"226",
+                "case_documents":[],
+                "case_type_id":"129",
+                "date":"2024-01-17",
+                "case_sub_type_id":"160",
+                "slot_id":"22",
+                "summary":"Testing Complaint"
+            }
+        },
+        
+        "master_api": {
+            "endpoint": "/master-sync/get-data",
+            "headers": {
+                "Content-Type": "application/json",
+                "Language": "en"
+            },
+            "body": {
+                "type":8
+            }
+        }
+        
+    }
+}
