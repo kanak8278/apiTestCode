@@ -25,7 +25,7 @@ def make_api_call(config, api_key, key, iv, response_file):
     if api_key == 'case_otp_send' or api_key == 'case_otp_validate':
         url = f"{config['base_url']}{api_details['endpoint']}"
     else:
-        url = f"{config['applicant_url']}{api_details['endpoint']}"
+        url = f"{config['applicant_base_url']}{api_details['endpoint']}"
     headers = api_details['headers']
     print("Headers:", headers)
     body = json.dumps(api_details['body'])
